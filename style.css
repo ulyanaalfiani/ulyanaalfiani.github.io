@@ -1,0 +1,13 @@
+*.jumbotron {
+  /*memanggil nama class jumbotron (section class ="jumbotron"*/
+  padding-top: 5rem; /*digunakan untuk memberi jarak antara navbar dengan gambar*/
+  background-color: #e3fbee;
+}
+
+#projects {
+  background-color: #e3fbee;
+}
+
+section {
+  padding-top: 5rem;
+}
