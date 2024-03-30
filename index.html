@@ -169,21 +169,30 @@
         </div>
         <div class="row justify-content-center mb-3">
           <div class="col-md-6">
-            <form>
+            <!--perintah untuk memunculkan pesan-->
+            <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Terima kasih!</strong> Pesan anda sudah terkirim.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <form name="ulyanaalfiani-contact-form">
+              <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="name" class="form-control" id="name" aria-describedby="name" name="nama" />
+              </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="email" />
+                <input type="email" class="form-control" id="email" aria-describedby="email" name="email" />
+                <!--name="email" digunakan untuk googlesheet dimana name="email" harus sama dengan nama kolomnya-->
               </div>
               <div class="mb-3">
                 <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" rows="3"></textarea>
+                <textarea class="form-control" id="message" rows="3" name="pesan"></textarea>
               </div>
-              <div class="mb-3">
-                <label for="name" class="form-label">Full Name</label>
-                <input type="name" class="form-control" id="name" aria-describedby="name" />
-              </div>
-
-              <button type="submit" class="btn" style="background-color: #0ad663">Sent</button>
+              <button type="submit" class="btn btn-sent" style="background-color: #0ad663">Sent</button>
+              <button class="btn btn-loading d-none" style="background-color: #0ad663" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -205,5 +214,37 @@
       <p>Created with <i class="bi bi-heart-fill text-danger"></i> <a href="https://www.instagram.com/ulyana_alfiani/" class="text-white fw-bold">by Ulyana Alfiani</a></p>
     </footer>
     <!--Akhir Footer-->
+
+    <!--untuk menyimpan ke google sheet tutorial dari https://github.com/jamiewilson/form-to-google-sheets-->
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxavpLoqlPX5djkMxQC2_-OATaPA40ZTb7IP0DNmEmvpZmSWbzUxCL29CJf2PtHDkjb/exec";
+      const form = document.forms["ulyanaalfiani-contact-form"];
+      //document.forms["ulyanaalfiani-contact-form"] => nama ulyanaalfiani-contact-form diambil dari form name="ulyanaalfiani-contact-form" yang ada di bagian contact
+
+      const btnSent = document.querySelector(".btn-sent");
+      const btnLoading = document.querySelector(".btn-loading");
+      const myAlert = document.querySelector(".my-alert");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        //ketika tombol submit diklik
+        //tampilkan tombol loading, hilangkan tombol kirim
+        btnLoading.classList.toggle("d-none");
+        btnSent.classList.toggle("d-none");
+
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            //tampilkan tombol kirim, hilangkan tombol loading
+            btnLoading.classList.toggle("d-none");
+            btnSent.classList.toggle("d-none");
+            //tampilkan alert
+            myAlert.classList.toggle("d-none");
+            //reset formnya
+            form.reset();
+            console.log("Success!", response);
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>
